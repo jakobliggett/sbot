@@ -5,10 +5,11 @@ Includes fuzzing to make wait times slightly random
 """
 
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import time
 import random
 
-VERSION = 0.01
+VERSION = 0.02
 Action_Delay = 0.5
 browser = webdriver.Chrome("/Users/jakobliggett/PycharmProjects/sbot/chromedriver")
 
@@ -32,9 +33,6 @@ def RealSend(send_object, text, cpm=500, rand_fuzzing = 0.10): ##200 avg 400 cpm
             time.sleep(timeperchar+random.uniform(-(timeperchar*rand_fuzzing), (timeperchar*rand_fuzzing))) ##Introduces random delay
             send_object.send_keys(char)
 
-
-
-
 def GoogleRoutine():
     browser.get('http://www.google.com')
     wait()
@@ -48,6 +46,19 @@ def TestUA():
     ##If UA is flagged the bot will be "banned", you can check here
     browser.get("https://www.google.com/search?q=what+is+my+user+agent&oq=what+is+my+user+agent")
 
+def ScanforProducts(buyclass):
+    products = {}
+    for category in buyclass:
+        try:
+            newprod = browser.find_elements_by_css_selector('.{} a'.format(category))
+            newlst = []
+            for element in newprod:
+                newlst.append ( (element.get_attribute("href")) )
+            products[category] = newlst
+        except Exception as e:
+            print('Error grabbing a category: ', str(e))
+    return products
+
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
     wait(1)
@@ -55,29 +66,28 @@ def SupremeRoutine(buyclass):
     shop_link.click()
     wait()
     ##Found shop, get type
-    products = {}
-    for category in buyclass:
-        try:
-            products[category] = browser.find_elements_by_class_name(category)
-        except Exception as e:
-            print('Error grabbing a category: ', str(e))
+    products = ScanforProducts(buyclass)
     #print(products)
     wait()
     item_names = []
+    print(list(products.items()))
     for category_of_items in list(products.items()):
         for item in category_of_items[1]:
             try:
                 wait()
                 print(item)
-                item.click()
+                browser.get(item)
                 wait()
-                product_name = browser.find_elements_by_class_name("protect")
+                product_name = browser.find_element_by_class_name("protect").text
+                print(product_name)
                 item_names.append(product_name)
                 wait()
-                browser.goBack()
+                browser.back()
+                products = ScanforProducts(buyclass)
                 wait()
             except Exception as e:
                 print('Error opening item: ', str(e), '\n')
+                wait(0.2)
 
     print('Item names: ', item_names)
     wait(12)
