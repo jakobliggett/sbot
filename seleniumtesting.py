@@ -64,7 +64,7 @@ def ScanforProducts(buyclass):
 
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
-    wait(1)
+    #wait(1)
     shop_link = browser.find_element_by_class_name("shop_link")
     shop_link.click()
     wait()
@@ -99,6 +99,7 @@ def SupremeRoutine(buyclass):
     print('\nItem Dict: ', link_dict)
     ##At this point we have all of the items and links! Just not all of the colors...
     ##TODO ADD COLOR CHECKING
+
     for item in link_dict: ##Fix this to add an approved list
         #if input('Buy {}? (y/n/): '.format(item)).lower().startswith('y'):
         if True:
@@ -117,11 +118,11 @@ def SupremeRoutine(buyclass):
         checkout = browser.find_element_by_css_selector(".button.checkout")
     except Exception as e:
         print("Couldn't find checkout button, {}".format(str(e)))
-    wait()
+    ##wait() We only need wait buttons in the checkout process so we should take out most of them.
     checkout.click()
+    ##checkout function
     wait(12)
-    browser.close()
-
+    ##browser.close() we dont want the browser to close before they checkout
 
 
 if __name__ == "__main__":
