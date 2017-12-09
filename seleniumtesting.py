@@ -8,10 +8,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import random
+import os
 
 VERSION = 0.02
 Action_Delay = 0.5
-browser = webdriver.Chrome("/Users/jakobliggett/PycharmProjects/sbot/chromedriver")
+current_direc = os.path.dirname(os.path.abspath(__file__))
+browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
 
 def wait(wtime=0, wfuzzing=0.20):
     if wtime == 0:
@@ -50,10 +52,11 @@ def ScanforProducts(buyclass):
     products = {}
     for category in buyclass:
         try:
-            newprod = browser.find_elements_by_css_selector('.{} a'.format(category))
+            newprod = browser.find_elements_by_css_selector('.{} a'.format(category)) ##This finds all elements with category
+            ##Then it grabs the "a" child which contains the link to the item
             newlst = []
             for element in newprod:
-                newlst.append ( (element.get_attribute("href")) )
+                newlst.append ( (element.get_attribute("href")) ) ##This gets the link text
             products[category] = newlst
         except Exception as e:
             print('Error grabbing a category: ', str(e))
@@ -69,7 +72,7 @@ def SupremeRoutine(buyclass):
     products = ScanforProducts(buyclass)
     #print(products)
     wait()
-    item_names = []
+    link_dict = {}
     print(list(products.items()))
     for category_of_items in list(products.items()):
         for item in category_of_items[1]:
@@ -78,18 +81,23 @@ def SupremeRoutine(buyclass):
                 print(item)
                 browser.get(item)
                 wait()
-                product_name = browser.find_element_by_class_name("protect").text
+                product_name = browser.find_element_by_class_name("protect").text ##This gets the name of the
+
+                other_colors = browser.find_elements_by_class_name("data-images")
+                print('others: ', other_colors)
+                for color in other_colors:
+                    print('Other color:', color, color.get_attribute("href"))
                 print(product_name)
-                item_names.append(product_name)
+                link_dict[product_name] = item
                 wait()
                 browser.back()
-                products = ScanforProducts(buyclass)
                 wait()
             except Exception as e:
                 print('Error opening item: ', str(e), '\n')
                 wait(0.2)
 
-    print('Item names: ', item_names)
+    print('\nItem Dict: ', link_dict)
+    ##At this point we have all of the items and links! Just not all of the colors...
     wait(12)
     browser.close()
 
