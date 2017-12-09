@@ -62,6 +62,17 @@ def ScanforProducts(buyclass):
             print('Error grabbing a category: ', str(e))
     return products
 
+def get_checkoutdata(in_file):
+    with open(in_file) as inp:
+        data = inp.read().splitlines()
+    dic = {}
+    #print(data)
+    for i in data:
+        dic[i.split(':')[0]] = i.split(': ', 1)[-1]
+    print(dic)
+    return dic
+
+
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
     #wait(1)
