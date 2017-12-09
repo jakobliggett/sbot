@@ -23,6 +23,8 @@ with open("checkoutdata.txt") as f:
             val = val.replace("\n", "")
         d[key] = val
 print(d)
-if 'N/A' in d.values():
-    
+for key, val in d.items():
+    if val == "N/A":
+        del d[key]
+print(d)
 #namef = browser.find_element_by_class_name("payment")
