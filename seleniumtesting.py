@@ -98,12 +98,33 @@ def SupremeRoutine(buyclass):
 
     print('\nItem Dict: ', link_dict)
     ##At this point we have all of the items and links! Just not all of the colors...
+    ##TODO ADD COLOR CHECKING
+    for item in link_dict: ##Fix this to add an approved list
+        #if input('Buy {}? (y/n/): '.format(item)).lower().startswith('y'):
+        if True:
+            ##buy
+            browser.get(link_dict[item])
+            try:
+                purchase = browser.find_element_by_css_selector("input.button")
+                purchase.click()
+            except Exception as e:
+                print('Out of stock, or: {}'.format(str(e)))
+            wait()
+            browser.back()
+            wait()
+    wait()
+    try:
+        checkout = browser.find_element_by_css_selector(".button.checkout")
+    except Exception as e:
+        print("Couldn't find checkout button, {}".format(str(e)))
+    wait()
+    checkout.click()
     wait(12)
     browser.close()
 
 
 
 if __name__ == "__main__":
-    to_buy = ["jackets", "sweatshirts"]
+    to_buy = ["jackets", "sweatshirts", "accessories"]
     SupremeRoutine(to_buy)
     #GoogleRoutine()
