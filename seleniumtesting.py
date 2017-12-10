@@ -14,6 +14,7 @@ VERSION = 0.02
 Action_Delay = 0.5
 current_direc = os.path.dirname(os.path.abspath(__file__))
 browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
+#browser = webdriver.Chrome()
 
 def wait(wtime=0, wfuzzing=0.20):
     if wtime == 0:
@@ -71,7 +72,6 @@ def get_checkoutdata(in_file):
         dic[i.split(':')[0]] = i.split(': ', 1)[-1]
     print(dic)
     return dic
-
 
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
@@ -131,7 +131,7 @@ def SupremeRoutine(buyclass):
         print("Couldn't find checkout button, {}".format(str(e)))
     ##wait() We only need wait buttons in the checkout process so we should take out most of them.
     checkout.click()
-    ##checkout function
+
     wait(12)
     ##browser.close() we dont want the browser to close before they checkout
 
