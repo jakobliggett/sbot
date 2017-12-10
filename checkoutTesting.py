@@ -17,6 +17,7 @@ def get_checkoutdata(in_file):
         dic[i.split(':')[0]] = i.split(': ', 1)[-1]
     print(dic)
     return dic
+
 def getItems():
     items = int(input('What items do you want?\nJackets\t1\ntops\t2\nsweaters\t3\nsweatshirts\t4\naccessories\t5\npants\t6\nhats\t7\nskate\t8'))
     if items == 1:
@@ -39,8 +40,34 @@ def getItems():
 def checkout():
         data = get_checkoutdata("checkoutdata.txt")
         browser.find_element_by_name("order[billing_name]").send_keys(data[name])
-        browser.find_element_by_name("order[email]").send_keys(data[])
-
+        browser.find_element_by_name("order[email]").send_keys(data[email])
+        browser.find_element_by_name("order[tel]").send_keys(data[tel])
+        browser.find_element_by_name("order[billing_address]").send_keys(data[address])
+        browser.find_element_by_name("order[billing_zip]").send_keys(data[zipp])
+        browser.find_element_by_name("order[billing_city]").send_keys(data[city])
+        if(data[apt] != 'N/A'):
+            browser.find_element_by_name("order[billing_address_2]").send_keys(data[apt])
+        parent = browser.find_element_by_name("order[billing_state]")
+        all_options = parent.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_attribute("value") == data[state]:
+                option.click()
+                break
+        browser.find_element_by_name("credit_card[nlb]").send_keys(data[CCN])
+        browser.find_element_by_name("credit_card[rvv]").send_keys(data[CCV])
+        parent = browser.find_element_by_name("credit_card[month]")
+        all_options = parent.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_get_attribute("value") == data[CCM]:
+                option.click()
+                break
+        parent = browser.find_element_by_name("credit_card[year]")
+        all_options = parent.find_elements_by_tag_name("option")
+        for option in all_options:
+            if option.get_get_attribute("value") == data[CCY]:
+                option.click()
+                break
+        browser.find_element_by_class_name("icheckbox_minimal").find_element_by_name("order[terms]").click()
 
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
