@@ -77,6 +77,8 @@ def SupremeRoutine(buyclass):
     wait()
     ##Found shop, get type
     products = getitems()
+    browser.find_element_by_class_name("shop_link").click()
+    
 
 if __name__ == '__main__':
-    checkout(get_checkoutdata("checkoutdata.txt"))
+    checkout()
