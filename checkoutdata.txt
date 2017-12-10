@@ -3,7 +3,7 @@ email: billybobjones@gmail.com
 tel: 1234567890
 address: 512 Henley St.
 apt: N/A
-zip: 12345
+zipp: 12345
 state: TN
 CCN: 1234567890121233
 CCM: 12
