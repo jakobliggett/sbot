@@ -1,12 +1,12 @@
-name: Billy Bob Jones
-email: billybobjones@gmail.com
-tel: 1234567890
-address: 512 Henley St.
-apt: N/A
-zipp: 12345
-city: Knoxville
-state: TN
-CCN: 1234567890121233
-CCM: 12
-CCY: 2020
-CCV: 123
+order_billing_name: Billy Bob Jones
+order_email: billybobjones@gmail.com
+order_tel: 1234567890
+bo: 512 Henley St.
+oba3: N/A
+order_billing_zip: 12345
+order_billing_city: Knoxville
+order_billing_state: TN
+nnaerb: 1234567890121233
+credit_card_month: 12
+credit_card_year: 2020
+orcer: 123

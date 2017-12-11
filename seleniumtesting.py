@@ -9,13 +9,13 @@ from selenium.webdriver.common.keys import Keys
 import time
 import random
 import os
+import checkoutTesting as check
 
 VERSION = 0.02
 Action_Delay = 0.5
 current_direc = os.path.dirname(os.path.abspath(__file__))
-if __name__ == "__main__":
-    browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
-
+browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
+#browser = webdriver.Chrome()
 
 def wait(wtime=0, wfuzzing=0.20):
     if wtime == 0:
@@ -25,7 +25,6 @@ def wait(wtime=0, wfuzzing=0.20):
             time.sleep(wtime)
         else:
             time.sleep(wtime+random.uniform(-(wtime*wfuzzing), (wtime*wfuzzing)))
-
 
 def RealSend(send_object, text, cpm=500, rand_fuzzing = 0.10): ##200 avg 400 cpm fast
     timeperchar = 60/cpm
@@ -38,7 +37,6 @@ def RealSend(send_object, text, cpm=500, rand_fuzzing = 0.10): ##200 avg 400 cpm
             time.sleep(timeperchar+random.uniform(-(timeperchar*rand_fuzzing), (timeperchar*rand_fuzzing))) ##Introduces random delay
             send_object.send_keys(char)
 
-
 def GoogleRoutine():
     browser.get('http://www.google.com')
     wait()
@@ -48,11 +46,9 @@ def GoogleRoutine():
     wait()
     linkElem.submit()
 
-
 def TestUA():
     ##If UA is flagged the bot will be "banned", you can check here
     browser.get("https://www.google.com/search?q=what+is+my+user+agent&oq=what+is+my+user+agent")
-
 
 def ScanforProducts(buyclass):
     products = {}
@@ -67,18 +63,6 @@ def ScanforProducts(buyclass):
         except Exception as e:
             print('Error grabbing a category: ', str(e))
     return products
-
-
-def get_checkoutdata(in_file):
-    with open(in_file) as inp:
-        data = inp.read().splitlines()
-    dic = {}
-    #print(data)
-    for i in data:
-        dic[i.split(':')[0]] = i.split(': ', 1)[-1]
-    print(dic)
-    return dic
-
 
 def SupremeRoutine(buyclass):
     browser.get('http://www.supremenewyork.com/')
@@ -136,14 +120,13 @@ def SupremeRoutine(buyclass):
         checkout = browser.find_element_by_css_selector(".button.checkout")
     except Exception as e:
         print("Couldn't find checkout button, {}".format(str(e)))
-    ##wait() We only need wait buttons in the checkout process so we should take out most of them.
+    wait()
     checkout.click()
-
-    wait(12)
+    check.checkout(browser)
     ##browser.close() we dont want the browser to close before they checkout
 
 
 if __name__ == "__main__":
-    to_buy = ["jackets", "sweatshirts", "accessories"]
+    to_buy = ["jackets", "sweatshirts"]
     SupremeRoutine(to_buy)
     #GoogleRoutine()
