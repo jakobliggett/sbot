@@ -3,9 +3,10 @@ from selenium.webdriver.common.keys import Keys
 import time
 import random
 import os
+import seleniumtesting
 
 current_direc = os.path.dirname(os.path.abspath(__file__))
-browser = webdriver.Chrome()
+browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
 
 #Alternative 1 with each value having a variable
 def get_checkoutdata(in_file):
