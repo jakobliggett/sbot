@@ -12,14 +12,15 @@ def LoadConfiguration(cfile):
     with open(cfile, 'r') as f:
         text = f.readlines()
         for line in text:
+            line = line.rstrip()
             split_line = line.split(':')
             config_category = split_line[0]
-            config_num = split_line[1]
+            config_num = float(split_line[1])
             config[config_category] = config_num
+    print(config)
     return config
 
 def FindProducts(browser, site):
-    #browser.get("http://www.supremenewyork.com/shop/all")
     browser.get(site)
     unsorted_products = browser.find_elements_by_xpath("""//*[@id="container"]/article[*]/div/a""")
     #"""//*[@id="container"]/article[88]/div/a"""
@@ -37,14 +38,37 @@ def FindProducts(browser, site):
 
 
 def ProductsToCart(browser, products, config):
+    current_cart_value = 0
     for product in products:
         category = product[0]
         link = product[1]
         browser.get(link)
-        time.sleep(1) ##Testing only
+        try:
+            product_name = browser.find_element_by_class_name("protect").text
+            product_price = float((browser.find_element_by_class_name("price").text[1:]).replace(',', '')) ##Strips dollar sign and converts to int
+            print(product_name, product_price)
+        except:
+            product_name = 'N/A'
+            product_price = 0
+
+        try:
+            add_to_cart = browser.find_element_by_css_selector("input.button")
+            if ((current_cart_value+product_price) < config['max_cart']) and (0 < product_price <= config[category]):
+                add_to_cart.click()
+                print('\nBuying {}, current cart:{}, cart after this: {}'.format(product_name, current_cart_value, current_cart_value+product_price))
+                current_cart_value += product_price
+            if (config['max_cart']-current_cart_value) <= config['max_cart']*0.2: ##if cart is within 20% of max checkout early
+                break ##Cart full, maxed on price
+        except:
+            pass
+        time.sleep(0.2) ##Is this necessary?
         browser.back()
+    print('CART FULL!')
 
-
+def Checkout(browser):
+    checkout_button = browser.find_element_by_css_selector(".button.checkout")
+    checkout_button.click()
+    ##Add E's code in here later
 
 def main():
     #site = "http://webcache.googleusercontent.com/search?q=cache:http://www.supremenewyork.com/shop/all"
@@ -53,9 +77,9 @@ def main():
     browser = webdriver.Chrome(chromedriver_path)
     products = FindProducts(browser, site)
     print(products)
-    #config = LoadConfiguration('config.txt') ##Change this?
-    config = []
+    config = LoadConfiguration('prices_config.txt') ##Change this?
     ProductsToCart(browser, products, config)
+    Checkout(browser)
     time.sleep(20) ##Just for debug so chrome doesn't eat all the ram
     browser.close()
 
