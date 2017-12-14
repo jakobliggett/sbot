@@ -34,9 +34,10 @@ def FindProducts(browser, site, config):
             sold_out_element = product.find_element_by_class_name("sold_out_tag")
         except Exception: ##I put this in here so it only triggers if
             category = (href_split[4])
-            link = ("{}/{}/{}".format(site, href_split[5], href_split[6]))
-            if config[category] > 0: ##Only add to check list if we're looking for them
-                products.append([category, link])
+            if category in config:
+                link = ("{}/{}/{}".format(site, href_split[5], href_split[6]))
+                if config[category] > 0: ##Only add to check list if we're looking for them
+                    products.append([category, link])
     if len(products) == 0:
         print('No products available!')
         time.sleep(1) ##Refresh Delay
@@ -48,29 +49,34 @@ def ProductsToCart(browser, products, config):
     current_cart_value = 0
     for product in products:
         category = product[0]
-        link = product[1]
-        browser.get(link)
-        try:
-            product_name = browser.find_element_by_class_name("protect").text
-            product_price = float((browser.find_element_by_class_name("price").text[1:]).replace(',', '')) ##Strips dollar sign and converts to int
-            #print(product_name, product_price)
-        except:
-            product_name = 'N/A'
-            product_price = 0
+        if category in config:
+            try:
+                #print(current_cart_value)
 
-        try:
-            add_to_cart = browser.find_element_by_css_selector("input.button")
-            if ((current_cart_value+product_price) < config['max_cart']) and (0 < product_price <= config[category]):
-                add_to_cart.click()
-                print('\nBuying {}, current cart:{}, cart after this: {}'.format(product_name, current_cart_value, current_cart_value+product_price))
-                current_cart_value += product_price
-            if (config['max_cart']-current_cart_value) <= config['max_cart']*0.2: ##if cart is within 20% of max checkout early
-                print('Break early, cart {}, difference {}, max cart {}'.format(current_cart_value, config['max_cart']-current_cart_value, config['max_cart']))
-                break ##Cart full, maxed on price
-        except:
-            pass
-        time.sleep(0.1) ##Is this necessary? # No
-        browser.back()
+                link = product[1]
+                browser.get(link)
+                try:
+                    product_name = browser.find_element_by_class_name("protect").text
+                    product_price = float((browser.find_element_by_class_name("price").text[1:]).replace(',', '')) ##Strips dollar sign and converts to int
+                    #print(product_name, product_price)
+                except:
+                    product_name = 'N/A'
+                    product_price = 0
+
+                try:
+                    add_to_cart = browser.find_element_by_css_selector("input.button")
+                    if ((current_cart_value+product_price) < config['max_cart']) and (0 < product_price <= config[category]):
+                        add_to_cart.click()
+                        print('\nBuying {}, current cart:{}, cart after this: {}'.format(product_name, current_cart_value, current_cart_value+product_price))
+                        current_cart_value += product_price
+                    if (config['max_cart']-current_cart_value) <= config['max_cart']*0.2: ##if cart is within 20% of max checkout early
+                        print('Break early, cart {}, difference {}, max cart {}'.format(current_cart_value, config['max_cart']-current_cart_value, config['max_cart']))
+                        break ##Cart full, maxed on price
+                except:
+                    pass
+            except: pass #Just for testing
+            time.sleep(0.2) ##Is this necessary? # No
+            browser.back()
     print('CART FULL!')
 
 def get_checkoutdata(in_file):
