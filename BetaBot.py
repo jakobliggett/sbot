@@ -126,14 +126,14 @@ def Checkout(browser):
 def main():
     #site = "http://webcache.googleusercontent.com/search?q=cache:http://www.supremenewyork.com/shop/all"
     site = "http://www.supremenewyork.com/shop/all"
-    current_path = "{}/chromedriver".format( os.path.dirname(os.path.abspath(__file__)) )
+    current_path = "{}".format( os.path.dirname(os.path.abspath(__file__)) )
     config = LoadConfiguration('prices_config.txt') ##Change this?
-    browser = webdriver.Chrome(current_path)
+    browser = webdriver.Chrome("{}/chromedriver".format(current_path))
     products = 0
     while products == 0: ##Loops until something found not sold out
         products = FindProducts(browser, site, config)
     try:
-        os.system("afplay {}/Alarm.mp3".format(current_path))
+        os.system("afplay {}/Alarm.mp3 &".format(current_path)) ##Just for fun
     except:
         pass ##This will prob fail on windows?
     print(products)

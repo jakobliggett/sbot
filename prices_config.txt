@@ -1,5 +1,5 @@
 max_cart:1000
-jackets:0
+jackets:100
 tops-sweaters:0
 sweatshirts:1000
 pants:0
