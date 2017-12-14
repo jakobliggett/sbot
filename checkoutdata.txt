@@ -1,9 +1,9 @@
 order_billing_name: Billy Bob Jones
 order_email: billybobjones@gmail.com
-order_tel: 1234567890
+order_tel: 8658675309
 bo: 512 Henley St.
 oba3: N/A
-order_billing_zip: 12345
+order_billing_zip: 37901
 order_billing_state: TN
 order_billing_city: Knoxville
 nnaerb: 1234567890121233
