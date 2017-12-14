@@ -1,8 +1,8 @@
-max_cart:300
-jackets:15000
-tops-sweaters:10000
-sweatshirts:40000
-pants:10000
-hats:10000
+max_cart:300000
+jackets:150000
+tops-sweaters:100000
+sweatshirts:400000
+pants:100000
+hats:100000
 accessories:0
 skate:0

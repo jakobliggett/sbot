@@ -20,7 +20,7 @@ browser = webdriver.Chrome("{}/chromedriver".format(current_direc))
 def wait(wtime=0, wfuzzing=0.20):
     if wtime == 0:
         time.sleep(Action_Delay+random.uniform(-(wtime*wfuzzing), (wtime*wfuzzing)))
-    else:
+    els
         if wfuzzing == 0:
             time.sleep(wtime)
         else:

@@ -4,8 +4,8 @@ order_tel: 1234567890
 bo: 512 Henley St.
 oba3: N/A
 order_billing_zip: 12345
-order_billing_city: Knoxville
 order_billing_state: TN
+order_billing_city: Knoxville
 nnaerb: 1234567890121233
 credit_card_month: 12
 credit_card_year: 2020

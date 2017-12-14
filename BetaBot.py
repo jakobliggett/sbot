@@ -6,6 +6,8 @@ Hopefully this is the more clean version of 'seleniumtesting'
 import selenium
 from selenium import webdriver
 import os, time
+from selenium.webdriver.common.keys import Keys
+import AntiBotMisc
 
 def LoadConfiguration(cfile):
     config = {}
@@ -61,14 +63,44 @@ def ProductsToCart(browser, products, config):
                 break ##Cart full, maxed on price
         except:
             pass
-        time.sleep(0.2) ##Is this necessary?
+        time.sleep(0.2) ##Is this necessary? # No
         browser.back()
     print('CART FULL!')
+
+def get_checkoutdata(in_file):
+    with open(in_file) as inp:
+        data = inp.read().splitlines()
+    dik = {}
+    #print(data)
+    for key in data:
+        dik[key.split(':')[0]] = key.split(': ', 1)[-1]
+    #print(dik)
+    return dik
 
 def Checkout(browser):
     checkout_button = browser.find_element_by_css_selector(".button.checkout")
     checkout_button.click()
     ##Add E's code in here later
+    data = get_checkoutdata('checkoutdata.txt')
+    for did in data:
+        if did == 'order_billing_state' or 'credit_card_month' or 'credit_card_year':
+            option = browser.find_element_by_id(did)
+            option.click()
+            option.send_keys(data[did])
+            option.send_keys(Keys.ENTER)
+        else:
+            if did == 'N/A':
+                pass
+            else:
+                element = browser.find_element_by_id(did)
+                element.click()
+                element.send_keys(data[did])
+    time.sleep(1)
+    terms = browser.find_element_by_class_name("order_terms.checkbox")
+    terms.click()
+    time.sleep(2)
+    terms = browser.find_element_by_name("commit")
+    terms.click()
 
 def main():
     #site = "http://webcache.googleusercontent.com/search?q=cache:http://www.supremenewyork.com/shop/all"
