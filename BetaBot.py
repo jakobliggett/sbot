@@ -80,27 +80,28 @@ def get_checkoutdata(in_file):
 def Checkout(browser):
     checkout_button = browser.find_element_by_css_selector(".button.checkout")
     checkout_button.click()
-    ##Add E's code in here later
     data = get_checkoutdata('checkoutdata.txt')
     for did in data:
+        print(data[did])
         if did == 'order_billing_state' or 'credit_card_month' or 'credit_card_year':
             option = browser.find_element_by_id(did)
             option.click()
             option.send_keys(data[did])
             option.send_keys(Keys.ENTER)
         else:
-            if did == 'N/A':
-                pass
-            else:
-                element = browser.find_element_by_id(did)
-                element.click()
-                element.send_keys(data[did])
-    time.sleep(1)
-    terms = browser.find_element_by_class_name("order_terms.checkbox")
-    terms.click()
-    time.sleep(2)
-    terms = browser.find_element_by_name("commit")
-    terms.click()
+            element = browser.find_element_by_id(did)
+            element.click()
+            AntiBotMisc.send(element, data[did])
+
+    element = browser.find_element_by_id('order_billing_city')
+    element.click()
+    element.clear()
+    element.send_keys(data['order_billing_city'])
+    browser.find_element_by_css_selector('input#order_terms.checkbox').click()
+    time.sleep(3.5)
+    ppay = browser.find_element_by_css_selector('input.button')
+    ppay.click()
+
 
 def main():
     #site = "http://webcache.googleusercontent.com/search?q=cache:http://www.supremenewyork.com/shop/all"
