@@ -135,7 +135,7 @@ def main():
     try:
         os.system("afplay {}/Alarm.mp3".format(current_path))
     except:
-        pass ##This will prob fail on windows
+        pass ##This will prob fail on windows?
     print(products)
     ProductsToCart(browser, products, config)
     Checkout(browser)
