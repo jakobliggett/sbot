@@ -34,11 +34,13 @@ def Checkout(browser):
                 element.click()
                 AntiBotMisc.send(element, data[did])
             else: pass # DOES NOT ENTER N/A
-            if did == 'order_billing_city':
-                for i in range(20): element.send_keys(Keys.BACKSPACE)
-                AntiBotMisc.send(element, data[did])
 
-        time.sleep(1)
+    element = browser.find_element_by_id('order_billing_city')
+    element.click()
+    element.clear()
+    #for i in range(30): element.send_keys(Keys.BACK_SPACE)
+    element.send_keys(data['order_billing_city'])
+
     terms = browser.find_element_by_class_name("order_terms.checkbox")
     terms.click()
     time.sleep(2)
